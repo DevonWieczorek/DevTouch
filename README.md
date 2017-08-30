@@ -24,6 +24,7 @@ This library currently only supports touch on mobile devices, but will be expand
 DevTouch is based around the TouchInstance object that accepts any legal CSS selector as it's argument.
 
 Your object can be created like so:
+
 var touchInstance = new TouchInstance('#element');
 
 However, your construtor function is not called when your object is created. This is for good reason though, 
@@ -32,6 +33,7 @@ create custom callbacks, etc. You pass each of them an anonymous function as an 
 can work your magic.
 
 Examples of both can be found below:
+
 touchInstance.beforeTouchInstanceInit(function(){
     console.log('Call me first');
     touchInstance.preventPageScroll = true;
@@ -43,6 +45,7 @@ touchInstance.afterTouchInstanceInit(function(){
 });
 
 You then construct your object like so:
+
 touchInstance.createTouchInstance();
 
 There are multiple native functions called that you can take advantage of that act as event listeners:
@@ -59,6 +62,7 @@ There are multiple native functions called that you can take advantage of that a
 - onOverflowRight
 
 These functions are written internally as variables, and are intended to be set to anonymous functions like so:
+
 touchInstance.handleTouchFunction = function(){
     console.log('Touched');
 }
