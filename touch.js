@@ -1,34 +1,30 @@
-/***********************************************/
-// DevTouch.js
-// v0.1.1
-// Authored By: Devon Wieczorek
-// Last Updated: 8/17/17
-/***********************************************/
-
-'use strict';
-
 function TouchInstance(el){
-        
+    
     this.el = $(el);
     this.elWidth = this.el.width();
     this.elHeight = this.el.height();
     this.parent = this.el.parent();
     this.boundX = this.parent.width();
     this.boundY = this.parent.height();
-    this.origX = this.el.offset().left;
-    this.origY = this.el.offset().top;
+    this.origX = this.el.offset().left - this.parent.offset().left;
+    this.origY = this.el.offset().top - this.parent.offset().top;
     this.deviceWidth = $(window).width();
     this.deviceHeight = $(window).height();
 
+    // Restrict Motion
     this.slideXEnabled = true;
     this.slideYEnabled = true;
 
+    // Misc Optional Arguments
     this.preventPageScroll = false;
     this.returnToOrigin = true;
     
+    // Event Functions
     this.handleTouchFunction = function(){}
     this.handleDragFunction = function(){}
     this.handleReleaseFunction = function(){}
+    
+    this.touchNotEnabledFunction = function(){}
     
     this.onBoundTop = function(){}
     this.onBoundBotton = function(){}
@@ -39,31 +35,32 @@ function TouchInstance(el){
     this.onBoundRight = function(){}
     this.onOverflowLeft = function(){}
     this.onOverflowRight = function(){}
-    
+
+    // Is this a touch enabled device?
     this.checkTouchEnabled = function(){
              // Works on Most Browsers  || Works on IE 10/11 and Surface
         return 'ontouchstart' in window || navigator.maxTouchPoints; 
     }
-    this.touchNotEnabled = function(){
-        console.log('Touch not supported on this device.');
-        return false;
-    }
     this.touchEnabled = this.checkTouchEnabled();
 
+    // Tracking elements for development/debugging
     this.trackingElements = `
         <div id="touchTrackingInfo" style="position: fixed; bottom: 0; right: 0; width: 100%; z-index: 99999; background: #fff;">
             Origin Y: <span class="origY"></span><br>
             Origin X: <span class="origX"></span><br>
-            Location Y: <span class="touchLocY"></span><br>
-            Loaction X: <span class="touchLocX"></span><br>
-            Touch Y (Position Offset Top): <span class="elPosY"></span><br>
-            Touch X (Position Offset Left): <span class="elPosX"></span><br>
+            Limit Top: <span class="limitTop"></span><br>
+            Limit Bottom: <span class="limitBottom"></span><br>
+            Limit Left: <span class="limitLeft"></span><br>
+            Limit Right: <span class="limitRight"></span><br>
+            Offset X: <span class="elPosX"></span><br>
+            Offset Y: <span class="elPosY"></span><br>
+            Touch Location Y: <span class="touchLocY"></span><br>
+            Touch Loaction X: <span class="touchLocX"></span><br>
         </div>
     `;
     this.showTrackingElements = false;
         
-    // Work some scope magic
-    // 'self' saves the context of 'this'
+    // Work some scope magic - 'self' saves the context of 'this'
     var self = this;
 
     this.setEventListeners = function(){
@@ -80,6 +77,7 @@ function TouchInstance(el){
             var bB = self.el.hasClass('touchBoundBottom');
             var oB = self.el.hasClass('touchOverflowBottom');
 
+            // Return element to it's original position
             if(self.returnToOrigin && !bT && !oT && !bB && !oB && !bL && !oL && !bR && !oR){ 
                 self.el.animate({
                     position: 'absolute', 
@@ -91,6 +89,7 @@ function TouchInstance(el){
         });
     }
 
+    // When element is touched
     this.handleTouch = function(){
         if(typeof self.handleTouchFunction == 'function') self.handleTouchFunction();
         
@@ -101,36 +100,41 @@ function TouchInstance(el){
         .on('mousemove touchmove', function(e){ self.handleDrag(e) }); 
     }
 
+    // When element is moved
     this.handleDrag = function(e){
         var x, y;
-        (self.touchEnabled) ? x = e.originalEvent.touches[0].pageX : x = self.el.pageX;
-        (self.touchEnabled) ? y = e.originalEvent.touches[0].pageY : y = self.el.pageY;
-        var touchLocX = x - (self.elWidth / 2);
-        var touchLocY = y - (self.elHeight / 2);
+        (self.touchEnabled) ? x = e.originalEvent.touches[0].pageX : x = e.clientX;
+        (self.touchEnabled) ? y = e.originalEvent.touches[0].pageY : y = e.clientY;
         var elPosX = self.el.offset().left;
         var elPosY = self.el.offset().top;
-        
+        var touchLocX = x - (self.elWidth / 2);
+        var touchLocY = y - (self.elHeight / 2);
+        var limitRight = self.boundX + self.parent.offset().left;
+        var limitLeft = self.parent.offset().left;
+        var limitBottom = self.boundY + self.parent.offset().top;
+        var limitTop = self.parent.offset().top;
+
         if(typeof self.handleDragFunction == 'function') self.handleDragFunction();
 
+        // Horizontal movements
         if(self.slideXEnabled){
             
             self.el.offset({left: touchLocX});
             
-            if(touchLocX >= (self.boundX - self.elWidth)){
+            if(touchLocX >= (limitRight - self.elWidth)){
                 self.el.addClass('touchBoundRight');
                 if(typeof self.onBoundRight == 'function') self.onBoundRight();
 
-                //find out why 1.5 works for touchLocX
-                if(touchLocX >= (self.boundX - self.elWidth / 1.5)){
+                if(touchLocX >= (limitRight - self.elWidth / 2)){
                     self.el.addClass('touchOverflowRight');
                     if(typeof self.onOverflowRight == 'function') self.onOverflowRight();
                 }
             }
-            else if(elPosX <= 0){
+            else if(touchLocX <= limitLeft){
                 self.el.addClass('touchBoundLeft');
                 if(typeof self.onBoundLeft == 'function') self.onBoundLeft();
 
-                if(elPosX <= (0 - self.elWidth / 4)){
+                if(touchLocX <= (limitLeft - self.elWidth / 2)){
                     self.el.addClass('touchOverflowLeft');
                     if(typeof self.onOverflowLeft == 'function') self.onOverflowLeft();
                 }
@@ -140,25 +144,25 @@ function TouchInstance(el){
             }
         } 
 
+        // Vertical Movements
         if(self.slideYEnabled){
             
             self.el.offset({top: touchLocY});
             
-            if(elPosY <= 0){
+            if(touchLocY <= limitTop){
                 self.el.addClass('touchBoundTop');
                 if(typeof self.onBoundBottom == 'function') self.onBoundBottom();
 
-                if(elPosY <= (0 - self.elHeight / 4)){
+                if(touchLocY <= (limitTop - self.elHeight / 2)){
                     self.el.addClass('touchOverflowTop');
                     if(typeof self.onOverflowBottom == 'function') self.onOverflowBottom();
                 }
             }
-            else if(touchLocY >= (self.boundY - self.elHeight)){
+            else if(touchLocY >= (limitBottom - self.elHeight)){
                 self.el.addClass('touchBoundBottom');
                 if(typeof self.onBoundTop == 'function') self.onBoundTop();
 
-                //find out why 1.5 works for touchLocY
-                if(touchLocY >= (self.boundY - self.elHeight / 1.5)){
+                if(touchLocY >= (limitBottom - self.elHeight / 2)){
                     self.el.addClass('touchOverflowBottom');
                     if(typeof self.onOverflowTop == 'function') self.onOverflowTop();
                 }
@@ -168,16 +172,22 @@ function TouchInstance(el){
             }
         } 
 
+        // Update tracking elements
         if(self.showTrackingElements){
             $('.origY').html(self.origY);
             $('.origX').html(self.origX);
             $('.touchLocY').html(touchLocY);
             $('.touchLocX').html(touchLocX);
-            $('.elPosY').html(elPosY);
+            $('.limitTop').html(limitTop);
+            $('.limitBottom').html(limitBottom);
             $('.elPosX').html(elPosX);
+            $('.elPosY').html(elPosY);
+            $('.limitLeft').html(limitLeft);
+            $('.limitRight').html(limitRight);
         }
     }
 
+    // When element is released
     this.handleRelease = function(e){
         $('body')
         .off('mousemove touchmove', this.handleDrag)
@@ -188,6 +198,7 @@ function TouchInstance(el){
         if(typeof self.handleReleaseFunction == 'function') self.handleReleaseFunction();
     }
 
+    // Called when the constructor is called
     this.checkConditionals = function(){
         if(self.preventPageScroll){
             $('html, body').on('touchstart touchmove', function(e){ 
@@ -215,14 +226,14 @@ function TouchInstance(el){
         // Call before init function if exists
         if(typeof this.beforeTouchInstanceInit == 'function') this.beforeTouchInstanceInit();
         
-        if(!this.touchEnabled){
-            this.touchNotEnabled();
-        }
-        else{
-            this.checkConditionals();
-            this.setEventListeners();
-            console.log('Touch Instance Created');
-        }
+        // If touch isn't enabled allow for a custom function to be called
+        if(!this.touchEnabled && typeof this.touchNotEnabledFunction == 'function'){
+            this.touchNotEnabledFunction();
+        } 
+        
+        this.checkConditionals();
+        this.setEventListeners();
+        console.log('Touch Instance Created');
         
         // Call after init function after object is created
         if(typeof this.afterTouchInstanceInit == 'function') this.afterTouchInstanceInit();
@@ -238,3 +249,4 @@ function TouchInstance(el){
     // touchInstance.onOverflowBottom = function(){} ... etc.
 
 }
+    
