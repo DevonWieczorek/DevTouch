@@ -1,8 +1,8 @@
 # DevTouch
 Javascript Touch Library
 Author: Devon Wieczorek
-Release: 0.1.1
-Last Updated: 8/17/17
+Release: 0.2.0
+Last Updated: 9/1/17
 
 Languages:
 - Javascript
@@ -12,14 +12,13 @@ Dependencies:
 - jQuery
 
 Known Limitations:
-- Currently does not work for web, only touch-enabled devices
+- Has been tested in limited environments
 
 To Do:
-- Adapt for web
 - Add more granular events
 
 DevTouch is a super lightweight Javascript Library (dependant on jQuery) that allows touch functionality and event listening to your pages.
-This library currently only supports touch on mobile devices, but will be expanded for web soon. 
+This library has now been expanded for desktop support as well. 
 
 DevTouch is based around the TouchInstance object that accepts any legal CSS selector as it's argument.
 
@@ -52,6 +51,7 @@ There are multiple native functions called that you can take advantage of that a
 - handleTouchFunction
 - handleDragFunction
 - handleReleaseFunction
+- touchNotEnabledFunction
 - onBoundTop
 - onBoundBottom
 - onBoundLeft
@@ -83,10 +83,15 @@ In your beforeTouchInstanceInit function if you set showTrackingElements to true
 container will be added to your document which tracks the following for your object:
 - Origin X
 - Origin Y
-- Location X (Location of your finger)
-- Location Y (Location of your finger)
-- Touch X (Position Offset Top)
-- Touch Y (Position Offset Left)
+- Limit Top
+- Limit Bottom
+- Limit Left
+- Limit Right
+- Offset X (Position Offset Top)
+- Offset Y (Position Offset Left)
+- Touch Location X (Location of your finger)
+- Touch Location Y (Location of your finger)
+
 
 DevScript includes a  full Javascript file which is heavily documented. 
 Paruse as your leisure, test it out for yourself, and PLEASE any feedback would be much appreciated! 

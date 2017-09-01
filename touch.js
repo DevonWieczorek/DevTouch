@@ -1,3 +1,12 @@
+/***********************************************/
+// DevTouch.js
+// v0.2.0
+// Authored By: Devon Wieczorek
+// Last Updated: 9/1/17
+/***********************************************/
+
+'use strict';
+
 function TouchInstance(el){
     
     this.el = $(el);
