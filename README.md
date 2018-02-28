@@ -29,7 +29,7 @@ var touchInstance = new TouchInstance('#element');
 ```
 
 ### Calling the Object
-Your construtor function is not called when your object is created. This is for good reason though, 
+Your construtor function is not called when the reference to your object is created. This is for good reason though, 
 as DevTouch has beforeTouchInstanceInit and afterTouchInstanceInit functions that allow you to overwrite native variables and functions,
 create custom callbacks, etc. You pass each of them an anonymous function as an argument, and inside is where you
 can work your magic.
