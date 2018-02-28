@@ -243,7 +243,6 @@ function TouchInstance(el){
         
         this.checkConditionals();
         this.setEventListeners();
-        console.log('Touch Instance Created');
         
         // Call after init function after object is created
         if(typeof this.afterTouchInstanceInit == 'function') this.afterTouchInstanceInit();
