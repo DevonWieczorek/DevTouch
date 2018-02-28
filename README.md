@@ -77,6 +77,16 @@ touchInstance.handleTouchFunction = function(){
 }
 ```
 
+Please note that boundaries are based on the parent element's dimensions and positioning. Parents should be either relatively 
+or absolutely positioned. For a better mobile experience, I recommend also adding these attributes to the parent's CSS.
+```css
+#parent{
+     -webkit-user-drag: none;
+     -webkit-tap-highlight: transparent;
+     -webkit-tap-highlight: rgba(0,0,0,0);
+}
+```
+
 ### Class Names
 These functions also have corresponding classes that are automatically added/removed to your element based on certain events:
 - touched
