@@ -104,9 +104,7 @@ container will be added to your document which tracks the following for your obj
 - Touch Location X (Location of your finger)
 - Touch Location Y (Location of your finger)
 
-
-
-
+### Contribute
 DevScript includes a  full Javascript file which is heavily documented. 
 Paruse as your leisure, test it out for yourself, and PLEASE any feedback would be much appreciated! 
 This project was intended to be open source and I would love to see it take on a life of it's own.
