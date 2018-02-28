@@ -77,16 +77,6 @@ touchInstance.handleTouchFunction = function(){
 }
 ```
 
-Please note that boundaries are based on the parent element's dimensions and positioning. Parents should be either relatively 
-or absolutely positioned. For a better mobile experience, I recommend also adding these attributes to the parent's CSS.
-```css
-#parent{
-     -webkit-user-drag: none;
-     -webkit-tap-highlight: transparent;
-     -webkit-tap-highlight: rgba(0,0,0,0);
-}
-```
-
 ### Class Names
 These functions also have corresponding classes that are automatically added/removed to your element based on certain events:
 - touched
@@ -98,6 +88,25 @@ These functions also have corresponding classes that are automatically added/rem
 - touchOverflowBottom
 - touchOverflowLeft
 - touchOverflowRight
+
+### CSS Qwirks
+Please note that boundaries are based on the parent element's dimensions and positioning. Parents should be either relatively 
+or absolutely positioned. For a better mobile experience, I recommend also adding these attributes to the parent's CSS.
+```css
+#parent{
+     -webkit-user-drag: none;
+     -webkit-tap-highlight: transparent;
+     -webkit-tap-highlight: rgba(0,0,0,0);
+}
+```
+To prevent weird drag effect when sliding, add these attributes to the element being moved. The only CSS transitions that should
+be applied should be applied on release.
+```css
+#touchElement.touched{
+    -webkit-transition: left 0s !important;
+    transition: left 0s !important;
+}
+```
 
 ### Debugging
 As a final hidden perk of the library, for development/debugging purposes it also includes tracking elements.
