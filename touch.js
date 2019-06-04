@@ -1,10 +1,24 @@
-/***********************************************/
-// DevTouch.js
-// v0.2.0
-// Authored By: Devon Wieczorek
-// https://github.com/DevonWieczorek/DevTouch
-// <script type="text/javascript" src="http://cdn.rawgit.com/DevonWieczorek/DevTouch/master/touch.js"></script>
-/***********************************************/
+/********************************************************************
+              ____             _____                _     
+             |  _ \  _____   _|_   _|__  _   _  ___| |__  
+             | | | |/ _ \ \ / / | |/ _ \| | | |/ __| '_ \ 
+             | |_| |  __/\ V /  | | (_) | |_| | (__| | | |
+             |____/ \___| \_/   |_|\___/ \__,_|\___|_| |_|
+                                              
+ ********************************************************************/                                    
+
+/**
+* jQuery based object for handling touch events.
+*
+* @author  Devon Wieczorek 
+* @version 0.2.0
+* @link    https://github.com/DevonWieczorek/DevTouch
+* @cdn     https://cdn.jsdelivr.net/gh/DevonWieczorek/DevTouch@master/touch.js
+**/
+
+/**
+* @param el {string} - Any valid CSS selector of the element to track
+**/
 
 'use strict';
 
